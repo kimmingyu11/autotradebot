@@ -17,12 +17,6 @@ def get_start_time(ticker):
     start_time = df.index[0]
     return start_time
 
-def get_ma15(ticker):
-    """15일 이동 평균선 조회"""
-    df = pyupbit.get_ohlcv(ticker, interval="day", count=15)
-    ma15 = df['close'].rolling(15).mean().iloc[-1]
-    return ma15
-
 def get_balance(ticker):
     """잔고 조회"""
     balances = upbit.get_balances()
@@ -52,7 +46,7 @@ while True:
         if start_time < now < end_time - datetime.timedelta(seconds=10):
             target_price = get_target_price("KRW-BTC", 0.4) #k
             current_price = get_current_price("KRW-BTC")
-            if target_price < current_price and ma15 < current_price: #+이동평균선
+            if target_price < current_price < current_price: #+이동평균선
                 krw = get_balance("KRW")
                 if krw > 5000:
                     upbit.buy_market_order("KRW-BTC", krw*0.9995)
